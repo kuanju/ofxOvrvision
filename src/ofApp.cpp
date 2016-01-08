@@ -17,17 +17,19 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-//    switch (key) {
+    switch (key) {
 //        case 'p':
 //            if (g_processMode == OVR::Camqt::OV_CAMQT_DMS)
 //                g_processMode = OVR::Camqt::OV_CAMQT_DMSRMP;
 //            else
 //                g_processMode = OVR::Camqt::OV_CAMQT_DMS;
 //            break;
-//            
-//        default:
-//            break;
-//    }
+
+        case 'e':
+            exit();
+        default:
+            break;
+    }
 
 }
 
@@ -82,4 +84,5 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::exit(){
+    ovrPro.exit();
 }

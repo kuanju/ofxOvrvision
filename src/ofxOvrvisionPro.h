@@ -23,15 +23,17 @@ class ofxOvrvisionPro{
     
         //ovrvision pro related:
     
-        int g_camWidth;
-        int g_camHeight;
+        int ovr_camWidth;
+        int ovr_camHeight;
 
-        ofTexture g_screen_texture;
-        ofVec3f g_hmdGap;
-        
-        OVR::OvrvisionPro* g_pOvrvision;
-        OVR::Camqt g_processMode = OVR::Camqt::OV_CAMQT_DMS;
-        
+        ofTexture ovr_screen_texture;
+        ofVec3f ovr_hmdGap;
+
+    
+        OVR::OvrvisionPro* ovr_Ovrvision;
+        OVR::Camprop cameraMode;
+        OVR::Camqt ovr_processMode = OVR::Camqt::OV_CAMQT_DMS;
+    
         unsigned char* p;
         unsigned char* p2;
 
