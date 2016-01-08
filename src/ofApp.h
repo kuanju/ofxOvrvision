@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 #include <ovrvision_pro.h>
+#include "ofxOvrvisionPro.h"
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -22,18 +24,5 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        int g_camWidth;
-        int g_camHeight;
-
-        //ovrvision pro related:
-        ofTexture g_screen_texture;
-        ofVec3f g_hmdGap;
-    
-        OVR::OvrvisionPro* g_pOvrvision;
-        OVR::Camqt g_processMode = OVR::Camqt::OV_CAMQT_DMS;
-
-    
-        //renderer
-        ofFbo fbo;
-		
+        ofxOvrvisionPro ovrPro;
 };
