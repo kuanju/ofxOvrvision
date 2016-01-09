@@ -1,5 +1,5 @@
 // ovrvision_pro.h
-// Version 1.00 : 1/Dec/2015
+// Version 1.31 : 8/Jan/2016
 //
 //MIT License
 //THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -128,7 +128,6 @@ typedef unsigned char* pbyte;
 /////////// CLASS ///////////
 
 //! OvrvisionPro class
-//class OVRPORT OvrvisionPro
 class OvrvisionPro
 {
 public:
@@ -264,6 +263,7 @@ public:
 	void UserDataAccessCheckSumAddress();
 	//Save the present setup to EEPROM. (Don't touch)
 	bool CameraParamSaveEEPROM();
+	bool CameraParamResetEEPROM();
 
 	// GPU texture
 	/*! @brief Create Skin textures
