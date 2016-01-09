@@ -11,10 +11,12 @@
 #include <ovrvision_pro.h>
 
 
-class ofxOvrvisionPro{
+class OvrPro{
+    private:
+
     public:
-        ofxOvrvisionPro();
-        ~ofxOvrvisionPro();
+        OvrPro();
+        ~OvrPro();
     
         void init();
         void update();
@@ -27,18 +29,22 @@ class ofxOvrvisionPro{
         int ovr_camHeight;
 
         ofTexture ovr_screen_texture;
+        ofPixels ovr_screen_pixel;
         ofVec3f ovr_hmdGap;
 
     
-        OVR::OvrvisionPro* ovr_Ovrvision;
+//        OVR::OvrvisionPro* ovr_Ovrvision;
+    
         OVR::Camprop cameraMode;
         OVR::Camqt ovr_processMode = OVR::Camqt::OV_CAMQT_DMS;
     
-        unsigned char* p;
-        unsigned char* p2;
+//        unsigned char* p;
+//        unsigned char* p2;
 
         //renderer
         ofFbo fbo;
+    
+        //use smart point to let the c++ handle resource management.
+        std::unique_ptr<OVR::OvrvisionPro> ovr_Ovrvision;
 
-    private:
 };

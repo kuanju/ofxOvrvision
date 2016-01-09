@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include <ovrvision_pro.h>
-#include "ofxOvrvisionPro.h"
+#include "OvrPro.h"
 
 class ofApp : public ofBaseApp{
 
@@ -24,5 +24,5 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        ofxOvrvisionPro ovrPro;
+        OvrPro ovrPro;
 };

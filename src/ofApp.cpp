@@ -85,4 +85,5 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::exit(){
     ovrPro.exit();
+    std::exit(1);
 }
