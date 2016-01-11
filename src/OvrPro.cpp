@@ -61,10 +61,17 @@ void OvrPro::init(){
     ovr_screen_texture.allocate(ovr_camWidth, ovr_camHeight,GL_RGBA);
 //    ovr_screen_pixel->allocate(ovr_camWidth, ovr_camHeight, OF_PIXELS_BGRA);
     fbo.allocate(ovr_camWidth*2, ovr_camHeight, GL_RGBA);
+    pixelBuffer.allocate(ovr_camWidth*ovr_camHeight*4,GL_DYNAMIC_READ);
     
     fbo.begin();
     ofClear(255,255,255, 0);
     fbo.end();
+
+//    https://forum.openframeworks.cc/t/ofbufferobject-and-async-camera-video-texture-upload/21824/2
+    tex.allocate(ovr_camWidth,ovr_camHeight,GL_RGBA);
+    pbo1.allocate(ovr_camWidth*ovr_camHeight*4,  GL_STREAM_DRAW);
+    auto dstBuffer = pbo1.map<unsigned char>(GL_WRITE_ONLY);
+    channel.send(dstBuffer);
 
 }
 
@@ -82,11 +89,19 @@ void OvrPro::update(){
         unsigned char* p = ovr_Ovrvision->GetCamImageBGRA(OVR::OV_CAMEYE_LEFT);
         unsigned char* p2 = ovr_Ovrvision->GetCamImageBGRA(OVR::OV_CAMEYE_RIGHT);
         
+//        pixelBuffer.updateData(ovr_camWidth*ovr_camHeight*4,p);
+
+
+        unsigned char * dstPixels;
+        channel.receive(dstPixels);
+        memcpy(dstPixels, p, ovr_camWidth*ovr_camHeight*4);
+        channelReady.send(true);
+
         
         /*get eyes view individually*/
         
 //        fbo.begin();
-        ovr_screen_texture.loadData(p, ovr_camWidth, ovr_camHeight, GL_BGRA); //<- this is causing memory increase
+//        ovr_screen_texture.loadData(p, ovr_camWidth, ovr_camHeight, GL_BGRA); //<- this is causing memory increase
 
 //        ovr_screen_pixel->setFromPixels(p, ovr_camWidth, ovr_camHeight, 4);
         
@@ -109,8 +124,16 @@ void OvrPro::draw(int _x =0, int _y =0){
     if (ovr_Ovrvision->isOpen())
     {
 //        fbo.draw(_x, _y);
-        ovr_screen_texture.draw(0,0);
-        
+//        ovr_screen_texture.draw(0,0);
+//        bool ready =  channelReady.send(true);
+//        if(channel.tryReceive()){
+            pbo1.unmap();
+            tex.loadData(pbo1,GL_BGRA,GL_UNSIGNED_BYTE);
+            auto dstBuffer = pbo1.map<unsigned char>(GL_WRITE_ONLY);
+            channel.send(dstBuffer);
+//        }
+
+        tex.draw(0,0);
     }
 
 }

@@ -28,8 +28,6 @@ class OvrPro{
         int ovr_camWidth;
         int ovr_camHeight;
 
-        ofTexture ovr_screen_texture;
-        ofPixels ovr_screen_pixel;
         ofVec3f ovr_hmdGap;
 
     
@@ -43,6 +41,17 @@ class OvrPro{
 
         //renderer
         ofFbo fbo;
+        ofTexture ovr_screen_texture;
+        ofPixels ovr_screen_pixel;
+        //try using buffer object as PBO (Pixel Buffer Object)
+        ofBufferObject pixelBuffer;
+
+        //https://forum.openframeworks.cc/t/ofbufferobject-and-async-camera-video-texture-upload/21824
+        ofTexture tex;
+        ofBufferObject pbo1;
+        ofThreadChannel<unsigned char*> channel;
+        ofThreadChannel<bool> channelReady;
+
     
         //use smart point to let the c++ handle resource management.
         std::unique_ptr<OVR::OvrvisionPro> ovr_Ovrvision;
