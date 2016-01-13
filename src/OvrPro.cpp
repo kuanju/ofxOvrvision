@@ -133,14 +133,7 @@ void OvrPro::draw(int _x =0, int _y =0){
         if (usePbo) {
             texL.draw(_x,_y);
         }else{
-            //              fboL.draw(_x, _y);
-            ofEnableNormalizedTexCoords();
-
-//            texL.draw(0,0);
-//            texL.bind();
-//            ofDrawRectangle(0, 0, 1, 1);
-//            texL.unbind();
-            ofDisableNormalizedTexCoords();
+            texL.draw(0,0);
         }
         
     }
