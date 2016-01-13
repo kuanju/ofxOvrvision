@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ovrPro.init();
+    ovrPro.init(false); //the argument decide to use PBO or not
 }
 
 //--------------------------------------------------------------

@@ -12,7 +12,7 @@ int main( ){
 
     
     ofGLWindowSettings s;
-    s.setGLVersion(3,2);
+    s.setGLVersion(4,1); //3,2
     s.width = 1920;
     s.height = 1080;
     ofCreateWindow(s);
