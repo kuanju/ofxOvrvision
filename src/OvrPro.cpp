@@ -70,17 +70,29 @@ void OvrPro::init(bool _usePbo = true){
         //    https://forum.openframeworks.cc/t/ofbufferobject-and-async-camera-video-texture-upload/21824/2
         texL.allocate(ovr_camWidth,ovr_camHeight,GL_RGBA);
         pboL.allocate(ovr_camWidth*ovr_camHeight*4,  GL_STREAM_DRAW);
-        auto dstBuffer = pboL.map<unsigned char>(GL_WRITE_ONLY);
-        channelL.send(dstBuffer);
+        auto dstBufferL = pboL.map<unsigned char>(GL_WRITE_ONLY);
+        channelR.send(dstBufferL);
+        texR.allocate(ovr_camWidth,ovr_camHeight,GL_RGBA);
+        pboR.allocate(ovr_camWidth*ovr_camHeight*4,  GL_STREAM_DRAW);
+        auto dstBufferR = pboR.map<unsigned char>(GL_WRITE_ONLY);
+        channelR.send(dstBufferR);
+        
     }else{
         pixL= (unsigned char*)malloc(ovr_camWidth*ovr_camHeight*4);
         texL.allocate(ovr_camWidth, ovr_camHeight,GL_RGBA);
         fboL.allocate(ovr_camWidth, ovr_camHeight, GL_RGBA);
+        pixR= (unsigned char*)malloc(ovr_camWidth*ovr_camHeight*4);
+        texR.allocate(ovr_camWidth, ovr_camHeight,GL_RGBA);
+        fboR.allocate(ovr_camWidth, ovr_camHeight, GL_RGBA);
         
         
         fboL.begin();
         ofClear(255,255,255, 0);
         fboL.end();
+        fboR.begin();
+        ofClear(255,255,255, 0);
+        fboR.end();
+        
     }
     
 }
@@ -98,29 +110,50 @@ void OvrPro::update(){
         
         
         if (usePbo) {
-            unsigned char * dstPixels;
-            channelL.receive(dstPixels);
-            memcpy(dstPixels, p, ovr_camWidth*ovr_camHeight*4);
+            unsigned char * dstPixelsL;
+            channelL.receive(dstPixelsL);
+            memcpy(dstPixelsL, p, ovr_camWidth*ovr_camHeight*4);
             channelLReady.send(true);
             
-            bool ready ;
-            if(channelLReady.tryReceive(ready)){
+            bool readyL ;
+            if(channelLReady.tryReceive(readyL)){
                 pboL.unmap();
                 texL.loadData(pboL,GL_BGRA,GL_UNSIGNED_BYTE);
-                auto dstBuffer = pboL.map<unsigned char>(GL_WRITE_ONLY);
-                channelL.send(dstBuffer);
+                auto dstBufferL = pboL.map<unsigned char>(GL_WRITE_ONLY);
+                channelL.send(dstBufferL);
             }
             
+            
+            unsigned char * dstPixelsR;
+            channelR.receive(dstPixelsR);
+            memcpy(dstPixelsR, p2, ovr_camWidth*ovr_camHeight*4);
+            channelRReady.send(true);
+            
+            bool readyR ;
+            if(channelRReady.tryReceive(readyR)){
+                pboR.unmap();
+                texR.loadData(pboR,GL_BGRA,GL_UNSIGNED_BYTE);
+                auto dstBufferR = pboR.map<unsigned char>(GL_WRITE_ONLY);
+                channelR.send(dstBufferR);
+            }
+            
+            
+            
         }else{
-            //            memcpy(pixL, p, ovr_camWidth*ovr_camHeight*4);
+            //memcpy(pixL, p, ovr_camWidth*ovr_camHeight*4);
             
             /*get eyes view individually*/
             //            fboL.begin();
             //            texL.loadData(pixL, ovr_camWidth, ovr_camHeight, GL_BGRA); //<- this is causing memory increase?
             texL.loadData(p, ovr_camWidth, ovr_camHeight, GL_BGRA); //<- this is causing memory increase?
-            fboL.attachTexture(texL, GL_BGRA, 0); // USE ATTACH,
+            //fboL.attachTexture(texL, GL_BGRA, 0); // USE ATTACH,
             //            ovr_screen_textureL.draw(0,0);
             //            fboL.end();
+            
+            texR.loadData(p2, ovr_camWidth, ovr_camHeight, GL_BGRA); //<- this is causing memory increase?
+            //fboR.attachTexture(texR, GL_BGRA, 0); // USE ATTACH,
+            
+            
         }
     }
     
@@ -132,12 +165,24 @@ void OvrPro::draw(int _x =0, int _y =0){
         
         if (usePbo) {
             texL.draw(_x,_y);
+            texR.draw(_x+ovr_camWidth,_y);
+            
         }else{
-            texL.draw(0,0);
+            //ßfboL.draw(_x, _y);
+            texL.draw(_x,_y);
+            texR.draw(_x+ovr_camWidth,_y);
         }
         
     }
     
+}
+
+ofTexture OvrPro::getTextureLeft(){
+    return texL;
+}
+
+ofTexture OvrPro::getTextureRight(){
+    return texR;
 }
 
 void OvrPro::exit(){

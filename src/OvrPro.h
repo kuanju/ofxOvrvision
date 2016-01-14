@@ -35,24 +35,39 @@ public:
     
     //regular renderer
     ofFbo fboL;
+    ofFbo fboR;
+    
     unsigned char * pixL;
+    unsigned char * pixR;
     
     
     //buffer object renderer, OpenGL 4.5?
     bool usePbo;
     //https://forum.openframeworks.cc/t/ofbufferobject-and-async-camera-video-texture-upload/21824
     ofTexture texL;
+    ofTexture texR;
+    
     ofBufferObject pboL;
+    ofBufferObject pboR;
+    
+    ofTexture getTextureLeft();
+    ofTexture getTextureRight();
+    
+private:
     ofThreadChannel<unsigned char*> channelL;
+    ofThreadChannel<unsigned char*> channelR;
+    
     ofThreadChannel<bool> channelLReady;
+    ofThreadChannel<bool> channelRReady;
     
     
     //use smart pointer to let the c++ handle resource management.
-    //    std::unique_ptr<OVR::OvrvisionPro> ovr_Ovrvision;
+    //std::unique_ptr<OVR::OvrvisionPro> ovr_Ovrvision;
     
     //use regular pointer: need to use with delet
-    //            OVR::OvrvisionPro* ovr_Ovrvision;
+    //OVR::OvrvisionPro* ovr_Ovrvision;
     
+    //don't use pointer
     OVR::OvrvisionPro ovr_Ovrvision;
     
     
