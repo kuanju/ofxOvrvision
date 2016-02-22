@@ -1,5 +1,5 @@
 // ovrvision_pro.h
-// Version 1.31 : 8/Jan/2016
+// Version 1.4 : 15/Jan/2016
 //
 //MIT License
 //THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -42,18 +42,23 @@
 #include <string.h>
 
 #ifdef _OVRVISION_EXPORTS	//in ovrvision
+#if defined(WIN32)
 #include "ovrvision_ds.h"	//!DirectShow
+#elif defined(MACOSX)
 #include "ovrvision_avf.h"	//!AVFoundation
-
+#elif defined(LINUX)
+#include <unistd.h>
+#include "ovrvision_v4l.h"	//!Video4Linux
+#endif
 #include "OvrvisionProCL.h"	//!OpenCL Engine
 #else
 //USB cameras driver
 #ifdef WIN32
 class OvrvisionDirectShow;
-#elif MACOSX
+#elif defined(MACOSX)
 #define OvrvisionAVFoundation   void
-#elif LINUX
-
+#elif defined(LINUX)
+class OvrvisionVideo4Linux;
 #endif
 //opencl class
 class OvrvisionProOpenCL;
@@ -77,7 +82,7 @@ namespace OVR {
 #endif	/*MACOSX*/
 	
 #ifdef LINUX
-    
+	#define OVRPORT
 #endif	/*LINUX*/
 
 #ifndef _OV_CAMEYE_ENUM_
@@ -200,6 +205,10 @@ public:
 	/*!	@brief Set exposure of the Ovrvision.
 		@param value Exposure time. Range of 0 - 32767 */
 	void SetCameraExposure(int value);
+	/*!	@brief Set exposure of the Ovrvision.
+		@param value Exposure time per Sec. 60Hz Range of 30 - 240 frame, 50Hz Range of 25 - 200 frame
+		@return error, true or false */
+	bool SetCameraExposurePerSec(float fps);
 	/*!	@brief Get gain value of the Ovrvision.
 		@return gain value. */
 	int GetCameraGain();
@@ -389,10 +398,10 @@ private:
 #ifdef WIN32
 	//DirectShow
 	OvrvisionDirectShow*	m_pODS;
-#elif MACOSX
+#elif defined(MACOSX)
 	OvrvisionAVFoundation*  m_pOAV;
-#elif LINUX
-	//NONE
+#elif defined(LINUX)
+	OvrvisionVideo4Linux*	m_pOV4L;
 #endif
 
 	//OpenCL Ovrvision System
@@ -409,7 +418,8 @@ private:
 	int				m_height;
 	int				m_framerate;
 	float			m_focalpoint;
-	float			m_rightgap[3];	//vector
+	float			m_rightgap[3];	//vector3
+	float			m_expo_f;
 
 	bool			m_isOpen;
 	bool			m_isCameraSync;
