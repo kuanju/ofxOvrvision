@@ -17,48 +17,47 @@ public:
     OvrPro();
     ~OvrPro();
     
-    void init(bool _usePbo);
+    void init();
     void update();
     void draw(int x, int y);
     void exit();
     
     //ovrvision pro related:
-    
     int ovr_camWidth;
     int ovr_camHeight;
     
-    ofVec3f ovr_hmdGap;
-    
-    
     OVR::Camprop cameraMode;
-    OVR::Camqt ovr_processMode = OVR::Camqt::OV_CAMQT_DMS;
+    OVR::Camqt ovr_processMode = OVR::Camqt::OV_CAMQT_DMS; //OV_CAMQT_DMSRMP, OV_CAMQT_DMS
     
     //regular renderer
-    ofFbo fboL;
-    ofFbo fboR;
-    
     unsigned char * pixL;
     unsigned char * pixR;
     
-    
-    //buffer object renderer, OpenGL 4.5?
-    bool usePbo;
-    //https://forum.openframeworks.cc/t/ofbufferobject-and-async-camera-video-texture-upload/21824
     ofTexture texL;
     ofTexture texR;
     
-    ofBufferObject pboL;
-    ofBufferObject pboR;
-    
+    //method
     ofTexture getTextureLeft();
     ofTexture getTextureRight();
+
+    
+    /********* Future Todo: **********/
+
+    //ofVec3f ovr_hmdGap;
+
+    //buffer object renderer, OpenGL 4.5?
+    //bool usePbo;
+    //https://forum.openframeworks.cc/t/ofbufferobject-and-async-camera-video-texture-upload/21824
+    //ofBufferObject pboL;
+    //ofBufferObject pboR;
+
     
 private:
-    ofThreadChannel<unsigned char*> channelL;
-    ofThreadChannel<unsigned char*> channelR;
-    
-    ofThreadChannel<bool> channelLReady;
-    ofThreadChannel<bool> channelRReady;
+    //buffer object renderer, OpenGL 4.5?
+    //ofThreadChannel<unsigned char*> channelL;
+    //ofThreadChannel<unsigned char*> channelR;
+    //ofThreadChannel<bool> channelLReady;
+    //ofThreadChannel<bool> channelRReady;
     
     
     //use smart pointer to let the c++ handle resource management.
